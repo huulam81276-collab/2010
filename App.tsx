@@ -1,5 +1,7 @@
+
 import React, { useState, useRef, useCallback } from 'react';
-import { generateCardImage, isApiKeySet } from './services/geminiService';
+// FIX: Removed `isApiKeySet` as the UI block checking for it has been removed to follow guidelines.
+import { generateCardImage } from './services/geminiService';
 import Card from './components/Card';
 import LoadingSpinner from './components/LoadingSpinner';
 
@@ -58,26 +60,8 @@ const App: React.FC = () => {
       });
   }, []);
 
-  // Check for API Key and render an error screen if it's missing
-  if (!isApiKeySet) {
-    return (
-      <div className="min-h-screen bg-red-100 flex flex-col items-center justify-center p-4" role="alert">
-        <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8 md:p-10 text-center">
-          <h1 className="text-3xl font-bold text-red-600 mb-4">Lỗi Cấu Hình</h1>
-          <p className="text-gray-700 text-lg">
-            Không tìm thấy <strong>API Key</strong> của Gemini.
-          </p>
-          {/* FIX: Updated environment variable name from VITE_API_KEY to API_KEY to be consistent with the changes in geminiService.ts. */}
-          <p className="mt-4 text-gray-600">
-            Để ứng dụng hoạt động, bạn cần thiết lập một biến môi trường tên là <code className="bg-gray-200 text-red-700 font-mono p-1 rounded-md">API_KEY</code> trong phần cài đặt của Vercel (hoặc nơi bạn triển khai ứng dụng) và giá trị là khóa API bạn nhận được từ Google AI Studio.
-          </p>
-           <p className="mt-6 text-sm text-gray-500">
-            Sau khi thêm hoặc sửa biến môi trường, bạn cần triển khai lại (re-deploy) dự án để thay đổi có hiệu lực.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // FIX: Removed the API key check UI block to comply with the guideline of not creating UI for API key management.
+  // Errors related to the API key will be displayed within the component's standard error handling flow.
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-200 via-rose-200 to-amber-100 w-full flex flex-col items-center justify-center p-4">

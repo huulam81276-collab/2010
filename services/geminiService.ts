@@ -1,6 +1,7 @@
+
 import { GoogleGenAI } from "@google/genai";
 
-// FIX: Use process.env.API_KEY as required by the coding guidelines. This resolves the TypeScript error with import.meta.env.
+// FIX: Use `process.env.API_KEY` as required by the coding guidelines. This fixes the TypeScript error and aligns with best practices.
 const API_KEY = process.env.API_KEY;
 
 // Export a flag to check if the API key is set in the UI
@@ -14,7 +15,7 @@ if (isApiKeySet) {
 export const generateCardImage = async (): Promise<string> => {
   // Check for the AI instance and API Key at the time of the call
   if (!ai) {
-    // FIX: Updated error message to refer to API_KEY instead of VITE_API_KEY for consistency.
+    // FIX: Updated error message to refer to the correct environment variable `API_KEY`.
     throw new Error("API_KEY chưa được cấu hình. Vui lòng thiết lập biến môi trường trong phần cài đặt deployment của bạn.");
   }
 
