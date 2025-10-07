@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useCallback } from 'react';
-import { generateCardImage } from './services/geminiService';
+import { generateCardImage, isApiKeySet } from './services/geminiService';
 import Card from './components/Card';
 import LoadingSpinner from './components/LoadingSpinner';
 
@@ -32,9 +32,9 @@ const App: React.FC = () => {
     try {
       const imageUrl = await generateCardImage();
       setGeneratedImage(imageUrl);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setError('Không thể tạo hình ảnh. Vui lòng thử lại sau.');
+      setError(err.message || 'Không thể tạo hình ảnh. Vui lòng thử lại sau.');
     } finally {
       setIsLoading(false);
     }
@@ -58,6 +58,26 @@ const App: React.FC = () => {
         setError('Không thể tải thiệp. Vui lòng thử lại.');
       });
   }, []);
+
+  // Check for API Key and render an error screen if it's missing
+  if (!isApiKeySet) {
+    return (
+      <div className="min-h-screen bg-red-100 flex flex-col items-center justify-center p-4" role="alert">
+        <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl p-8 md:p-10 text-center">
+          <h1 className="text-3xl font-bold text-red-600 mb-4">Lỗi Cấu Hình</h1>
+          <p className="text-gray-700 text-lg">
+            Không tìm thấy <strong>API Key</strong> của Gemini.
+          </p>
+          <p className="mt-4 text-gray-600">
+            Để ứng dụng hoạt động, bạn cần thiết lập một biến môi trường tên là <code className="bg-gray-200 text-red-700 font-mono p-1 rounded-md">API_KEY</code> trong phần cài đặt của Vercel (hoặc nơi bạn triển khai ứng dụng) và giá trị là khóa API bạn nhận được từ Google AI Studio.
+          </p>
+           <p className="mt-6 text-sm text-gray-500">
+            Sau khi thêm biến môi trường, bạn cần triển khai lại (re-deploy) dự án để thay đổi có hiệu lực.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-200 via-rose-200 to-amber-100 w-full flex flex-col items-center justify-center p-4">
@@ -125,7 +145,7 @@ const App: React.FC = () => {
                  <p className="text-sm text-gray-500">Quá trình này có thể mất một chút thời gian.</p>
               </div>
             )}
-            {!isLoading && error && <p className="text-red-500">{error}</p>}
+            {!isLoading && error && <p className="text-red-500 px-4 text-center">{error}</p>}
             {!isLoading && !generatedImage && (
               <div className="text-center text-gray-500">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
@@ -156,8 +176,10 @@ const App: React.FC = () => {
           </div>
         </main>
       </div>
-       <footer className="text-center mt-6 text-gray-500 text-sm">
-          <p>Tạo bởi Gemini API & React</p>
+       <footer className="text-center mt-6 text-gray-500 text-sm space-y-1">
+          <p>Tạo bởi Gemini API &amp; React.</p>
+          <p>Ứng dụng được phát triển bởi <strong>Thầy Giới</strong> (Trung tâm Bal Digitech).</p>
+          <p>Liên hệ đào tạo: 0972.300.864</p>
       </footer>
     </div>
   );

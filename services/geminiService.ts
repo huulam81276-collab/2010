@@ -3,13 +3,20 @@ import { GoogleGenAI } from "@google/genai";
 
 const API_KEY = process.env.API_KEY;
 
-if (!API_KEY) {
-  throw new Error("API_KEY is not defined in environment variables");
+// Export a flag to check if the API key is set in the UI
+export const isApiKeySet = !!API_KEY;
+
+let ai: GoogleGenAI | null = null;
+if (isApiKeySet) {
+  ai = new GoogleGenAI({ apiKey: API_KEY });
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY });
-
 export const generateCardImage = async (): Promise<string> => {
+  // Check for the AI instance and API Key at the time of the call
+  if (!ai) {
+    throw new Error("API_KEY chưa được cấu hình. Vui lòng thiết lập biến môi trường trong phần cài đặt deployment của bạn.");
+  }
+
   try {
     const prompt = `A beautiful and elegant greeting card for Vietnamese Women's Day (October 20th). 
     Style: delicate watercolor painting. 
@@ -33,10 +40,14 @@ export const generateCardImage = async (): Promise<string> => {
       const imageUrl = `data:image/jpeg;base64,${base64ImageBytes}`;
       return imageUrl;
     } else {
-      throw new Error("No images were generated.");
+      throw new Error("Không có hình ảnh nào được tạo ra.");
     }
   } catch (error) {
     console.error("Error generating image with Gemini:", error);
-    throw new Error("Failed to generate image from Gemini API.");
+    // Re-throw a more user-friendly error
+    if (error instanceof Error && error.message.includes('API key')) {
+         throw new Error("API Key không hợp lệ. Vui lòng kiểm tra lại.");
+    }
+    throw new Error("Không thể tạo hình ảnh từ Gemini API.");
   }
 };
