@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback } from 'react';
 import { generateCardImage, isApiKeySet } from './services/geminiService';
 import Card from './components/Card';
@@ -68,11 +67,12 @@ const App: React.FC = () => {
           <p className="text-gray-700 text-lg">
             Không tìm thấy <strong>API Key</strong> của Gemini.
           </p>
+          {/* FIX: Updated environment variable name from VITE_API_KEY to API_KEY to be consistent with the changes in geminiService.ts. */}
           <p className="mt-4 text-gray-600">
             Để ứng dụng hoạt động, bạn cần thiết lập một biến môi trường tên là <code className="bg-gray-200 text-red-700 font-mono p-1 rounded-md">API_KEY</code> trong phần cài đặt của Vercel (hoặc nơi bạn triển khai ứng dụng) và giá trị là khóa API bạn nhận được từ Google AI Studio.
           </p>
            <p className="mt-6 text-sm text-gray-500">
-            Sau khi thêm biến môi trường, bạn cần triển khai lại (re-deploy) dự án để thay đổi có hiệu lực.
+            Sau khi thêm hoặc sửa biến môi trường, bạn cần triển khai lại (re-deploy) dự án để thay đổi có hiệu lực.
           </p>
         </div>
       </div>
